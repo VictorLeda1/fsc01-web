@@ -11,7 +11,7 @@ function TweetForm({ loggedInUser, onSuccess }) {
         onSubmit: async (values, form) => {
             await axios({
             method: 'post',
-            url: 'http://localhost:9901/tweets',
+            url: 'https://fsc01-api-one.vercel.app',
             headers:{
                 'authorization': `Bearer ${loggedInUser.accessToken}`
             },
@@ -77,7 +77,7 @@ export function Home({ loggedInUser }) {
     const [data, setData] = useState([])  
 
     async function getData() {
-      const res = await axios.get('http://localhost:9901/tweets', {
+      const res = await axios.get('https://fsc01-api-one.vercel.app', {
         headers: {
             'authorization': `Bearer ${loggedInUser.accessToken}`
         }

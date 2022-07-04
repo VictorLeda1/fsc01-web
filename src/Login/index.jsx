@@ -37,7 +37,7 @@ export function Login({ signInUser }) {
             <div className="flex-1 flex justify-center items-center p-12 space-y-6">
                 <div className="max-w-md flex-1">
                 <h1 className="text-3xl">Acesse sua conta</h1>
-
+                <br />
                 <form className="space-y-6" onSubmit={formik.handleSubmit}>
 
                 <div className='space-y-2'>

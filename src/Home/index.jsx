@@ -1,12 +1,31 @@
 import { HeartIcon } from '@heroicons/react/outline'
 import { useState } from 'react'
-import axios from 'axios'
 import { useEffect } from 'react'
+import axios from 'axios'
+import { useFormik, validateYupSchema } from 'formik'
 
 const MAX_TWEET_CHAR = 140
 
-function TweetForm() {
-    const [text, setText] = useState('')
+function TweetForm({ loggedInUser, onSuccess }) {
+    const formik = useFormik({
+        onSubmit: async (values, form) => {
+            await axios({
+            method: 'post',
+            url: 'http://localhost:9901/tweets',
+            headers:{
+                'authorization': `Bearer ${loggedInUser.accessToken}`
+            },
+            data: {
+                text: values.text
+            },
+        })
+        form.setFieldValue('text', '')
+        onSuccess()
+    },
+        initialValues: {
+            text: ''
+        }
+    })
 
     function changeText(e) {
         setText(e.target.value)
@@ -19,14 +38,14 @@ function TweetForm() {
             <h1 className="font-bold text-xl">Página Inicial</h1>
             </div>
 
-            <form className="pl-12 text-lg flex flex-col">
-                <textarea className="bg-transparent outline-none disabled:opacity-50" name="text" value={text} placeholder="O que está acontecendo?" onChange={changeText} />
+            <form className="pl-12 text-lg flex flex-col" onSubmit={formik.handleSubmit}>
+                <textarea className="bg-transparent outline-none disabled:opacity-50" name="text" value={formik.values.text} placeholder="O que está acontecendo?" onChange={formik.handleChange} onBlur={formik.handleBlur} disabled={formik.isSubmitting}/>
 
             <div className="flex justify-end items-center space-x-3">
                 <span className='text-sm'>
-                  <span> {text.length} </span>/ <span className='text-birdBlue'> {MAX_TWEET_CHAR} </span>
+                  <span> {formik.values.text.length} </span>/ <span className='text-birdBlue'> {MAX_TWEET_CHAR} </span>
                 </span>
-                <button className="bg-birdBlue px-5 py-2 rounded-full disabled:opacity-50" disabled={text.length > MAX_TWEET_CHAR}>Tweet</button>
+                <button type="submit" className="bg-birdBlue px-5 py-2 rounded-full disabled:opacity-50" disabled={formik.values.text.length > MAX_TWEET_CHAR || formik.isSubmitting}>Tweet</button>
             </div>
             </form>
         </div>
@@ -72,7 +91,7 @@ export function Home({ loggedInUser }) {
 
    return (
     <>
-    <TweetForm />    
+    <TweetForm loggedInUser={loggedInUser} onSuccess={getData}/>    
         <div>
             {data.length && data.map(tweet => (
                 <Tweet key={tweet.id} name={tweet.user.name} username={tweet.user.username} avatar="/src/avatar.png">

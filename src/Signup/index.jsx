@@ -38,7 +38,7 @@ export function Signup({ signInUser }) {
     return(
         <div className="h-full flex flex-col justify-center p-12 space-y-6">
             <h1 className="text-3xl">Crie sua conta</h1>
-
+            <br />
             <form className="space-y-6" onSubmit={formik.handleSubmit}>
 
             <div className='space-y-2'>

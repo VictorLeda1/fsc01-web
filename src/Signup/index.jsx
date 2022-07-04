@@ -17,7 +17,7 @@ const validationSchema = yup.object({
 
 export function Signup({ signInUser }) {
     const formik = useFormik({
-        onSubmit: async values => {const res = await axios.post('https://fsc01-api-one.vercel.app', {
+        onSubmit: async values => {const res = await axios.post('https://fsc01-api-one.vercel.app/signup', {
             
                 name: values.name,
                 username: values.username,
